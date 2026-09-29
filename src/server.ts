@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import { supabase } from "./config/supabase";
 
 dotenv.config();
 
@@ -13,6 +14,20 @@ app.get("/", (req, res) => {
   res.json({
     message: "Provn backend is running"
   });
+});
+
+app.get("/test-db", async (req, res) => {
+  const { data, error } = await supabase
+    .from("test")
+    .select("*");
+
+  if (error) {
+    return res.status(500).json({
+      error: error.message
+    });
+  }
+
+  res.json(data);
 });
 
 app.listen(PORT, () => {
